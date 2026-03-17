@@ -1,6 +1,5 @@
 package net.fieldb0y.bpl.interpreter.environment.function.builtin;
 
-import net.fieldb0y.bpl.interpreter.Token;
 import net.fieldb0y.bpl.interpreter.environment.function.FunctionSignature;
 import net.fieldb0y.bpl.interpreter.exception.error.RuntimeError;
 import net.fieldb0y.bpl.interpreter.object.ArrayObject;
@@ -119,19 +118,39 @@ public class BuiltinFunctions {
             }
     );
 
-    public static final BuiltinFunction PARSE_INT = new BuiltinFunction(INT_TYPE, new FunctionSignature("parseInt", List.of(STRING_TYPE)), (interpreter, args) ->
-            new IntegerNumber(Integer.parseInt(((StringObject)args.getFirst()).get()))
-    );
+    public static final BuiltinFunction PARSE_INT = new BuiltinFunction(INT_TYPE, new FunctionSignature("parseInt", List.of(STRING_TYPE)), (interpreter, args) -> {
+        String str = ((StringObject)args.getFirst()).get();
+        try {
+            return new IntegerNumber(Integer.parseInt(str));
+        } catch (NumberFormatException e) {
+            throw new RuntimeError("Unable to parse int from '" + str + "': " + e.getMessage());
+        }
+    });
 
-    public static final BuiltinFunction PARSE_LONG = new BuiltinFunction(LONG_TYPE, new FunctionSignature("parseLong", List.of(STRING_TYPE)), (interpreter, args) ->
-            new LongNumber(Long.parseLong(((StringObject)args.getFirst()).get()))
-    );
+    public static final BuiltinFunction PARSE_LONG = new BuiltinFunction(LONG_TYPE, new FunctionSignature("parseLong", List.of(STRING_TYPE)), (interpreter, args) -> {
+        String str = ((StringObject)args.getFirst()).get();
+        try {
+            return new LongNumber(Long.parseLong(str));
+        } catch (NumberFormatException e) {
+            throw new RuntimeError("Unable to parse long from '" + str + "': " + e.getMessage());
+        }
+    });
 
-    public static final BuiltinFunction PARSE_FLOAT = new BuiltinFunction(FLOAT_TYPE, new FunctionSignature("parseFloat", List.of(STRING_TYPE)), (interpreter, args) ->
-            new FloatNumber(Float.parseFloat(((StringObject)args.getFirst()).get()))
-    );
+    public static final BuiltinFunction PARSE_FLOAT = new BuiltinFunction(FLOAT_TYPE, new FunctionSignature("parseFloat", List.of(STRING_TYPE)), (interpreter, args) -> {
+        String str = ((StringObject)args.getFirst()).get();
+        try {
+            return new FloatNumber(Float.parseFloat(str));
+        } catch (NumberFormatException e) {
+            throw new RuntimeError("Unable to parse float from '" + str + "': " + e.getMessage());
+        }
+    });
 
-    public static final BuiltinFunction PARSE_DOUBLE = new BuiltinFunction(DOUBLE_TYPE, new FunctionSignature("parseDouble", List.of(STRING_TYPE)), (interpreter, args) ->
-            new DoubleNumber(Double.parseDouble(((StringObject)args.getFirst()).get()))
-    );
+    public static final BuiltinFunction PARSE_DOUBLE = new BuiltinFunction(DOUBLE_TYPE, new FunctionSignature("parseDouble", List.of(STRING_TYPE)), (interpreter, args) -> {
+        String str = ((StringObject)args.getFirst()).get();
+        try {
+            return new DoubleNumber(Double.parseDouble(str));
+        } catch (NumberFormatException e) {
+            throw new RuntimeError("Unable to parse double from '" + str + "': " + e.getMessage());
+        }
+    });
 }

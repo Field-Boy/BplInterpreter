@@ -1,7 +1,7 @@
 package net.fieldb0y.bpl.interpreter;
 
 public record Token(Type type, String lexeme, Object literal, int line) {
-    public Token(Type type, int line){
+    public Token(Type type, int line) {
         this(type, "", null, line);
     }
 

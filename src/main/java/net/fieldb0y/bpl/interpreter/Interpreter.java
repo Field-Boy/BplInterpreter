@@ -35,11 +35,11 @@ public class Interpreter implements AstVisitor<TypedObject<?>> {
         }
     }
 
-    public TypedObject<?> evaluate(Expression expr){
+    public TypedObject<?> evaluate(Expression expr) {
         return expr != null ? expr.visit(this) : null;
     }
 
-    public void execute(Statement stmt){
+    public void execute(Statement stmt) {
         if (stmt != null)
             stmt.visit(this);
     }
@@ -114,7 +114,7 @@ public class Interpreter implements AstVisitor<TypedObject<?>> {
                 TypedObject<?> val = evaluate(expr);
                 if (!BplUtils.canAssign(INT_TYPE, val))
                     throw new RuntimeError("Array dimension size should be INT_TYPE, but got " + BplUtils.toTokenType(val));
-                dimensions.add(((Number) BplUtils.getTypedObject(INT_TYPE, val).get()).intValue());
+                dimensions.add(((Number)BplUtils.getTypedObject(INT_TYPE, val).get()).intValue());
             } else dimensions.add(null);
         }
         return dimensions;
@@ -133,7 +133,7 @@ public class Interpreter implements AstVisitor<TypedObject<?>> {
                 execute(stmt.thenBranch());
             else if(stmt.elseBranch() != null)
                 execute(stmt.elseBranch());
-        }else throw new RuntimeError("Condition in 'if' statement must be boolean");
+        } else throw new RuntimeError("Condition in 'if' statement must be boolean");
     }
 
     @Override
@@ -237,14 +237,14 @@ public class Interpreter implements AstVisitor<TypedObject<?>> {
 
     @Override
     public TypedObject<?> visitFunctionCall(FunctionCall call) {
-        if (!(call.callee() instanceof IdentifierExpression id))
+        if (!(call.callee() instanceof IdentifierExpression(String name)))
             throw new RuntimeError("Can only call functions by name");
 
         List<TypedObject<?>> args = new ArrayList<>();
         for (Expression argExpr : call.args()){
             args.add(evaluate(argExpr));
         }
-        Callable function = env.getFunction(id.name(), args);
+        Callable function = env.getFunction(name, args);
         return function.call(this, args);
     }
 
@@ -258,14 +258,14 @@ public class Interpreter implements AstVisitor<TypedObject<?>> {
         boolean shouldAssign = opType == EQUAL || opType == PLUS_PLUS || opType == MINUS_MINUS || (opType != op.type());
 
         if (opType == EQUAL){
-            if (expr.left() instanceof IdentifierExpression id){
-                env.setVar(id.name(), rightObj);
+            if (expr.left() instanceof IdentifierExpression(String name)){
+                env.setVar(name, rightObj);
                 return rightObj;
-            } else if(expr.left() instanceof ArrayAccessExpression accessExpr){
-                TypedObject<?> obj = evaluate(accessExpr.expression());
+            } else if(expr.left() instanceof ArrayAccessExpression(Expression expression, List<Expression> indices)){
+                TypedObject<?> obj = evaluate(expression);
                 if (!(obj instanceof ArrayObject array))
                     throw new RuntimeError("Cannot access element of non-array object '" + obj.toString() + "'");
-                array.setElement(calcArrayIndices(accessExpr.indices()), rightObj);
+                array.setElement(calcArrayIndices(indices), rightObj);
                 return rightObj;
             } else throwBinaryExprError(leftObj, op, rightObj, "", "Can only assign values to variables");
         }
@@ -323,13 +323,13 @@ public class Interpreter implements AstVisitor<TypedObject<?>> {
         if (result == null)
             throwBinaryExprError(leftObj, op, rightObj, "", "");
         if (shouldAssign){
-            if (expr.left() instanceof ArrayAccessExpression accessExpr){
-                TypedObject<?> obj = evaluate(accessExpr.expression());
+            if (expr.left() instanceof ArrayAccessExpression(Expression expression, List<Expression> indices)){
+                TypedObject<?> obj = evaluate(expression);
                 if (!(obj instanceof ArrayObject array))
                     throw new RuntimeError("Cannot access element of non-array object '" + obj.toString() + "'");
-                array.setElement(calcArrayIndices(accessExpr.indices()), result);
-            } else if (expr.left() instanceof IdentifierExpression id)
-                env.setVar(id.name(), result);
+                array.setElement(calcArrayIndices(indices), result);
+            } else if (expr.left() instanceof IdentifierExpression(String name))
+                env.setVar(name, result);
             else throwBinaryExprError(leftObj, op, rightObj, "", "Can only assign values to variables");
         }
 

@@ -41,7 +41,9 @@ public abstract class TypedNumber<T extends Number> extends TypedObject<T> {
         return val.get() == null;
     }
 
-    public static TypedNumber<?> add(TypedNumber<?> n1, TypedNumber<?> n2){
+    public static TypedNumber<?> add(
+            TypedNumber<?> n1, TypedNumber<?> n2
+    ){
         TypedNumber<?> wider = getWiderTypedNumber(n1, n2);
         return wider.instantiate(wider.add(n1.value, n2.value));
     }

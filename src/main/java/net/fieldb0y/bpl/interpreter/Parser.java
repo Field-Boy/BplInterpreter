@@ -442,7 +442,8 @@ public class Parser {
     }
 
     private Token consume(Token.Type type, String message){
-        if (check(type)) return advance();
+        if (check(type))
+            return advance();
         throw new ParseError(message + " at line " + peek().line());
     }
 

@@ -1,7 +1,5 @@
 package net.fieldb0y.bpl.interpreter.object;
 
-import java.util.Objects;
-
 public class StringObject extends TypedObject<String> {
     public StringObject(String value) {
         super(value);

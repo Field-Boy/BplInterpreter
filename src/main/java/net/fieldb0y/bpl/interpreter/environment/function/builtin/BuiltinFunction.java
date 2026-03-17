@@ -40,7 +40,7 @@ public class BuiltinFunction implements Callable {
 
         TypedObject<?> returnValue = implementation.apply(interpreter, args);
         if (returnType != VOID_TYPE && !BplUtils.canAssign(returnType, returnValue))
-            throw new RuntimeError("Invalid type of return value in builtin function '" + signature.name() + "'. Expected '" + returnType + "', but got '" + BplUtils.toTokenType(returnValue) + "'");
+            throw new RuntimeError("Invalid type of return value in built-in function '" + signature.name() + "'. Expected '" + returnType + "', but got '" + BplUtils.toTokenType(returnValue) + "'");
         return returnValue;
     }
 
