@@ -1,0 +1,13 @@
+// Скрипт для нахождения четверти на тригонометрической окружности по углу
+
+print("Welcome to Quarter Finder! If you want to exit, type 'exit' instead of angle.");
+while (true) {
+	string n = input("Enter Angle: ");
+	if (n == "exit"){
+		break;
+	}
+	long angle = parseLong(n);
+	long normalized = ((angle % 360) + 360) % 360;
+	print((normalized / 90) % 4 + 1);
+}
+

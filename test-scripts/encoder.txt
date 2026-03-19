@@ -1,0 +1,32 @@
+// Скрипт для энкодирования и декодирования строки
+
+string source = input("Enter text: ");
+string encoded = encode(source);
+
+print("Encoded: " + encoded);
+print("Decoded: " + decode(encoded));
+
+string encode(string source){
+    string result = "";
+    for (int i = 0; i < len(source); i++){
+        result += lpad(numSys((int)source[i], 10, 2), 8, "0");
+    }
+    return result;
+}
+
+string decode(string source){
+    string result = "";
+    for (int i = 0; i + 8 <= len(source); i += 8){
+        string byte = substring(source, i, i + 8);
+        result += (string)((char)parseInt(numSys(byte, 2, 10)));
+    }
+    return result;
+}
+
+string substring(string str, int from, int to){
+    string result = "";
+    for (int i = from; i < to; i++){
+        result += str[i];
+    }
+    return result;
+}
